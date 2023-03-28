@@ -16,5 +16,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+      - run: nvm use
+        working-directory: starter/frontend
+      - run: npm ci
+        working-directory: starter/frontend
       - run: npm run lint
         working-directory: starter/frontend
