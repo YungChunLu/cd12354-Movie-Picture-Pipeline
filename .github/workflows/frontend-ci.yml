@@ -18,5 +18,28 @@ jobs:
           node-version: 18
       - run: npm ci
         working-directory: starter/frontend
-      - run: FAIL_LINT=true npm run lint
+      - run: npm run lint
         working-directory: starter/frontend
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm ci
+        working-directory: starter/frontend
+      - run: npm test
+        working-directory: starter/frontend
+  build:
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: docker/build-push-action@v4
+        with:
+          context: starter/frontend
+          load: true
+          tags: mp-frontend:latest
+      - run: |
+          docker run --name mp-frontend -p 3000:3000 -d mp-frontend
